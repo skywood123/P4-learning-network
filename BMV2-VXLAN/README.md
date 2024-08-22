@@ -101,7 +101,7 @@ te.insert()
 
 te=table_entry["MyIngress.ipv4_lpm"](action="MyIngress.ipv4_forward")
 te.match["hdr.ipv4.dstAddr"] = "192.168.60.48/32"
-te.action["port"] = "1"
+te.action["port"] = "2"
 te.action["dstAddr"] = "e2:68:55:d6:53:e1"
 te.insert()
 ```
