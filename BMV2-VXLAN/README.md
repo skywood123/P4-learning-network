@@ -5,6 +5,11 @@
 2. Install docker
 3. P4 program
 
+## Container used in this experiment
+1.p4lang/p4c
+2.p4lang/behavioral-model
+3.p4lang/p4runtime-sh
+
 ## Compiling P4 program
 
 Put your .p4 program at directory, and mount it to p4c compiler container
