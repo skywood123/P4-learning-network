@@ -41,6 +41,18 @@ sudo ip netns exec blue ip link set blue-in up
 sudo ip link set blue-out up
 ```
 
+Adding static arp entry to the namespace blue
+
+Machine A
+```
+sudo ip netns exec blue arp -s 192.168.60.49 1e:6c:9f:94:03:71
+```
+Machine B
+```
+sudo ip netns exec blue arp -s 192.168.60.48 e2:68:55:d6:53:e1
+```
+
+
 Create a directory and put in P4info file and JSON file, in this example; /home/netadmin/p4. This directory need to mount to container later
 ```
 mkdir p4
@@ -54,6 +66,7 @@ sudo docker run --privileged --net=host --rm -it -v /home/netadmin/p4:/p4 --name
 sudo docker exec -it bmv2 /bin/bash
 simple_switch_grpc --log-console --device-id 1 -i 1@peering -i 2@blue-out --pcap=/p4 -Ldebug --no-p4 -- --cpu-port 255 --grpc-server-add 0.0.0.0:50001
 ```
+Maintain this tab, you can observe packet hit/miss event occured at the BMV2 switch.
 
 Machine B
 ```
@@ -99,11 +112,26 @@ te.action["dstAddr"] = "e2:68:55:d6:53:e1"
 te.insert()
 ```
 
+Inside P4Runtime-Shell container, you can execute this to check table entry.
+```
+table_entry["MyIngress.ipv4_lpm"].read(lambda te: print(te))
+```
+## Test ping
+Machine A
+```
+sudo ip netns exec blue ping 192.168.60.49
+```
+Check the loopback interface is up and the namespace interface can ping itself first.
+
+
 ## Compiling P4 program
 
 Put your .p4 program at directory, and mount it to p4c compiler container
 ```
-p4c --target bmv2 --arch v1model basic.p4
+sudo docker run --rm -it -v /home/netadmin/p4:/tmp --name p4c -d p4lang/p4c
+sudo docker exec -it p4c /bin/bash
+cd /tmp
+p4c --target bmv2 --arch v1model --p4runtime-files p4info.txt basic.p4
 ```
 
 
