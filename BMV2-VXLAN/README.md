@@ -1,5 +1,5 @@
 # Experiment with BMV2 + VXLAN interface to forward traffic between machines
-
+![image](https://github.com/user-attachments/assets/30de1756-2abe-40ec-8814-2b83c64bc781)
 ## Requirement
 1. Two Linux Machines(Ex.Ubuntu)
 2. Install docker
@@ -133,6 +133,7 @@ Machine A
 sudo ip netns exec blue ping 192.168.60.49
 ```
 Check the loopback interface is up and the namespace interface can ping itself first.
+
 
 
 
