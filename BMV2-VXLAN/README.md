@@ -3,10 +3,21 @@
 ## Requirement
 1. Two Linux Machines(Ex.Ubuntu)
 2. Install docker
-   
+3. P4 program
+
+## Compiling P4 program
+
+Put your .p4 program at directory, and mount it to p4c compiler container
+```
+sudo docker run --rm -it -v /home/netadmin/p4:/tmp --name p4c -d p4lang/p4c
+sudo docker exec -it p4c /bin/bash
+cd /tmp
+p4c --target bmv2 --arch v1model --p4runtime-files p4info.txt basic.p4
+```
+
 ## Configuration
 
-Prepare VXLAN interface between 2 machine
+### Prepare VXLAN interface between 2 machine
 
 Machine A
 ```
@@ -19,7 +30,7 @@ sudo ip link add peering type vxlan id 100 local 172.20.14.49 remote 172.20.14.4
 sudo ip link set peering up
 ```
 
-Prepare a namespace to simulate as host connecting to BMV2 switch
+### Prepare a namespace to simulate as host connecting to BMV2 switch
 
 Machine A
 ```
@@ -41,7 +52,7 @@ sudo ip netns exec blue ip link set blue-in up
 sudo ip link set blue-out up
 ```
 
-Adding static arp entry to the namespace blue
+### Adding static arp entry to the namespace blue
 
 Machine A
 ```
@@ -53,12 +64,12 @@ sudo ip netns exec blue arp -s 192.168.60.48 e2:68:55:d6:53:e1
 ```
 
 
-Create a directory and put in P4info file and JSON file, in this example; /home/netadmin/p4. This directory need to mount to container later
+### Create a directory and put in P4info file and JSON file, in this example; /home/netadmin/p4. This directory need to mount to container later
 ```
 mkdir p4
 ```
 
-Initialize BMV2 Container and start the Simple_switch_grpc target
+### Initialize BMV2 Container and start the Simple_switch_grpc target
 
 Machine A
 ```
@@ -76,7 +87,7 @@ sudo docker run --privileged --net=host --rm -it -v /home/netadmin/p4:/p4 --name
 The --pcap=/p4 is for packet capture on the switch interfaces
 
 
-Use of P4RuntimeShell container as our P4RuntimeClient to program the switch table entry
+### Use of P4RuntimeShell container as our P4RuntimeClient to program the switch table entry
 
 Machine A
 ```
@@ -112,7 +123,7 @@ te.action["dstAddr"] = "e2:68:55:d6:53:e1"
 te.insert()
 ```
 
-Inside P4Runtime-Shell container, you can execute this to check table entry.
+### Inside P4Runtime-Shell container, you can execute this to check table entry.
 ```
 table_entry["MyIngress.ipv4_lpm"].read(lambda te: print(te))
 ```
@@ -124,15 +135,7 @@ sudo ip netns exec blue ping 192.168.60.49
 Check the loopback interface is up and the namespace interface can ping itself first.
 
 
-## Compiling P4 program
 
-Put your .p4 program at directory, and mount it to p4c compiler container
-```
-sudo docker run --rm -it -v /home/netadmin/p4:/tmp --name p4c -d p4lang/p4c
-sudo docker exec -it p4c /bin/bash
-cd /tmp
-p4c --target bmv2 --arch v1model --p4runtime-files p4info.txt basic.p4
-```
 
 
 
