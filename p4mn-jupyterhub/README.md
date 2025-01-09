@@ -14,16 +14,16 @@
     cd p4mn-jupyter
     sudo docker build -t p4mn .
 ```
-3.  By default jupyterhub listen on port 8000. Modify the **docker-compose.yml** 100.100.2.2 with your desired IP address to listen on.
+2.  By default jupyterhub listen on port 8000. Modify the **docker-compose.yml** 100.100.2.2 with your desired IP address to listen on.
 ```
     cd jupyterhub-deploy-docker/basic-example/
     nano docker-compose.yml
        ports:
       - "100.100.2.2:8000:8000"
 ```
-4.  Spin up jupyterhub
+3.  Spin up jupyterhub
 ```
     sudo docker compose up
 ```
-6.  Access your jupyterhub at http://<IP_Address>:8000
+4.  Access your jupyterhub at http://<IP_Address>:8000
    
