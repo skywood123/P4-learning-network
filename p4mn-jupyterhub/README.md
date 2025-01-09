@@ -1,8 +1,8 @@
 # Containerized Jupyterhub application
 
 ## What this repository doing
-1.  p4mn-jupyter folder contains dockerfile to build a jupyter notebook container that runs **mininet, bmv2(grpc), P4RuntimeShell**.
-2.  jupyter-deploy-docker folder contains file to spin up jupyterhub.
+1.  ```p4mn-jupyter folder``` contains dockerfile to build a jupyter notebook container that runs **mininet, bmv2(grpc), P4RuntimeShell**.
+2.  ```jupyter-deploy-docker folder``` contains file to spin up jupyterhub.
 
 ## Prerequisites
 ---------------------------------
